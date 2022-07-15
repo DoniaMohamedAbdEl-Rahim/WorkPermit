@@ -12,6 +12,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     float rotationSpeed;
     Animator anim;
+    bool canMove = false;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -20,6 +21,7 @@ public class CharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(canMove)
         Move();
         if (Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
