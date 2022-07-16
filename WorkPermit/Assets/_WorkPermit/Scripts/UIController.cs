@@ -19,6 +19,17 @@ public class UIController : MonoBehaviour
     GameObject startPanel;
     [SerializeField]
     GameObject processingFirstPanel;
+    [SerializeField]
+    GameObject []processPanels;
+    int currentProcessIdx=1;
+    [SerializeField]
+    GameObject hotPermit;
+    [SerializeField]
+    GameObject coldPermit;
+    [SerializeField]
+    GameObject ELOBPermit;
+    [SerializeField]
+    GameObject CESPermit;
     void Start()
     {
         
@@ -33,6 +44,7 @@ public class UIController : MonoBehaviour
     {
         if (notOrderedIdx == currentIdx)
         {
+            Debug.Log(currentIdx);
             FindObjectOfType<AudioManager>().PlayeSound("Right");
             orderedBtns[currentIdx].gameObject.SetActive(true);
             notOrderedBtns[currentIdx].GetComponent<Image>().color = Color.green;
@@ -42,6 +54,7 @@ public class UIController : MonoBehaviour
         }
         else
         {
+            Debug.Log(currentIdx);
             notCorrect = true;
             FindObjectOfType<AudioManager>().PlayeSound("Wrong");
         }
@@ -82,6 +95,26 @@ public class UIController : MonoBehaviour
     }
     public void NextBtn()
     {
+        processPanels[currentProcessIdx-1].SetActive(false);
+        processPanels[currentProcessIdx].SetActive(true);
+        currentProcessIdx++;
+        FindObjectOfType<AudioManager>().PlayeSound("Click");
+    }
+    public void UnderGroundPipe()
+    {
+        NextBtn();
+    }
+    public void AboveGroundPipe()
+    {
+        // let the current idx become on the right part of the process
+    }
+    public void ManualExecavation()
+    {
+        //Cold Permit
+    }
+    public void MechanicalExecavation()
+    {
+        //Hot Permit
 
     }
 }
