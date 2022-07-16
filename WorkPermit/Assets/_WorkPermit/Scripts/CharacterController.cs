@@ -12,7 +12,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     float rotationSpeed;
     Animator anim;
-    bool canMove = false;
+    public bool canMove = false;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();

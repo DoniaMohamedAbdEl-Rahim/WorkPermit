@@ -6,11 +6,11 @@ using UnityEngine;
 public class UIController : MonoBehaviour
 {
     [SerializeField]
-    Button []orderedBtns;
+    Button[] orderedBtns;
     [SerializeField]
     Button[] notOrderedBtns;
     int currentIdx = 0;
-    bool notCorrect=false;
+    bool notCorrect = false;
     [SerializeField]
     GameObject ProcessingPanels;
     [SerializeField]
@@ -20,24 +20,32 @@ public class UIController : MonoBehaviour
     [SerializeField]
     GameObject processingFirstPanel;
     [SerializeField]
-    GameObject []processPanels;
-    int currentProcessIdx=1;
+    GameObject[] processPanels;
+    int currentProcessIdx = 1;
     [SerializeField]
-    GameObject hotPermit;
+    GameObject[] Permits;
+    int currentPermitIdx = 0;
+    int currentCheckListIdx = 0;
     [SerializeField]
-    GameObject coldPermit;
+    GameObject player;
     [SerializeField]
-    GameObject ELOBPermit;
+    GameObject cam1;
     [SerializeField]
-    GameObject CESPermit;
+    GameObject cam2;
+    [System.Serializable]
+    struct ChickList
+    {
+        public List<Toggle> lstToggels;
+    };
+    [SerializeField]
+    ChickList[] chicklists;
     void Start()
     {
-        
     }
 
     void Update()
     {
-        
+
     }
 
     public void SelectProcess(int notOrderedIdx)
@@ -95,9 +103,10 @@ public class UIController : MonoBehaviour
     }
     public void NextBtn()
     {
-        processPanels[currentProcessIdx-1].SetActive(false);
+        processPanels[currentProcessIdx - 1].SetActive(false);
         processPanels[currentProcessIdx].SetActive(true);
         currentProcessIdx++;
+        Debug.Log(currentProcessIdx);
         FindObjectOfType<AudioManager>().PlayeSound("Click");
     }
     public void UnderGroundPipe()
@@ -108,13 +117,65 @@ public class UIController : MonoBehaviour
     {
         // let the current idx become on the right part of the process
     }
-    public void ManualExecavation()
-    {
-        //Cold Permit
-    }
     public void MechanicalExecavation()
     {
         //Hot Permit
+        processPanels[currentProcessIdx - 1].SetActive(false);
+        Permits[0].SetActive(true);
+        currentPermitIdx = 0;
+    }
+    public void ManualExecavation()
+    {
+        //Cold Permit
+        processPanels[currentProcessIdx - 1].SetActive(false);
+        Permits[1].SetActive(true);
+        currentPermitIdx = 1;
+        FindObjectOfType<AudioManager>().PlayeSound("Click");
+    }
 
+    public void DoneTakingPermit()
+    {
+        Permits[currentPermitIdx].SetActive(false);
+        NextBtn();
+        FindObjectOfType<AudioManager>().PlayeSound("Click");
+    }
+    public void DonePreExecavationLst()
+    {
+        currentCheckListIdx = 0;
+        CheckListToggels();
+        FindObjectOfType<AudioManager>().PlayeSound("Click");
+    }
+    public void DoneExecavationLst()
+    {
+        currentCheckListIdx++;
+        CheckListToggels();
+        //all of this for testing
+        processPanels[currentProcessIdx - 1].SetActive(false);
+        player.GetComponent<CharacterController>().canMove = true;
+        FindObjectOfType<AudioManager>().PlayeSound("Click");
+        cam1.SetActive(false);
+        cam2.SetActive(true);
+    }
+    void CheckListToggels()
+    {
+       // Debug.Log(currentCheckListIdx);
+        int checkedNum = 0;
+        foreach (var toggle in chicklists[currentCheckListIdx].lstToggels)
+        {
+            if (toggle.isOn)
+            {
+                checkedNum++;
+            }
+        }
+        //Debug.Log($"{checkedNum}, {currentCheckListIdx } , {chicklists[currentCheckListIdx].lstToggels.Count}");
+        if (checkedNum == chicklists[currentCheckListIdx].lstToggels.Count)
+        {
+            NextBtn();
+        }
+        else
+        {
+            if (currentCheckListIdx>0)
+                currentCheckListIdx--;
+        }
     }
 }
